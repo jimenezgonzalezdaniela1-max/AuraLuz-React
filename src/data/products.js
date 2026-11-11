@@ -1,0 +1,38 @@
+export const products = [
+  {
+    id: "rosa",
+    name: "Vela Rosa",
+    title: "Rosa",
+    description: "Aroma floral suave y romántico.",
+    price: 25000,
+    image: "/img/rosa.jpg",
+    alt: "Vela aromática con forma de rosa",
+  },
+  {
+    id: "girasol",
+    name: "Vela Girasol",
+    title: "Girasol",
+    description: "Aroma cálido con notas de vainilla.",
+    price: 28000,
+    image: "/img/girasol.jpg",
+    alt: "Vela aromática con forma de girasol",
+  },
+  {
+    id: "campana",
+    name: "Vela Campana amarilla",
+    title: "Campana amarilla",
+    description: "Aroma cítrico y fresco.",
+    price: 22000,
+    image: "/img/campana-amarilla.jpg",
+    alt: "Vela aromática con forma de campana amarilla",
+  },
+  {
+    id: "margarita",
+    name: "Vela Margarita",
+    title: "Margarita",
+    description: "Aroma limpio con toques de manzanilla.",
+    price: 20000,
+    image: "/img/margarita.jpg",
+    alt: "Vela aromática con forma de margarita",
+  },
+];
