@@ -1,8 +1,10 @@
 import { useState } from "react";
 import { LOGO } from "../data/config";
+import { useAuth } from "../context/AuthContext";
 
 export default function Header({ cartCount, onOpenCart }) {
   const [menuOpen, setMenuOpen] = useState(false);
+  const { user, signOut } = useAuth();
 
   return (
     <header className="site-header" id="inicio-header">
@@ -36,6 +38,10 @@ export default function Header({ cartCount, onOpenCart }) {
 
       <button className="cart-btn" aria-label="Abrir carrito" onClick={onOpenCart}>
         Carrito <span className="cart-count">{cartCount}</span>
+      </button>
+
+      <button className="logout-btn" onClick={signOut} title={user?.name}>
+        Cerrar sesión
       </button>
     </header>
   );

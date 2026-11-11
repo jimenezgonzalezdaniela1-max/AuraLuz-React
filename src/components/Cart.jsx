@@ -1,25 +1,37 @@
+import { useState } from "react";
 import { WHATSAPP } from "../data/config";
 import { formatPrice } from "../utils/format";
+import { createOrder } from "../services/api";
 
 export default function Cart({ open, onClose, cart }) {
   const { items, changeQty, remove, clear, total } = cart;
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState("");
 
-  const checkout = () => {
-    if (items.length === 0) return;
+  const checkout = async () => {
+    if (items.length === 0 || busy) return;
+    setBusy(true);
+    setError("");
 
-    const lines = items.map(
-      (i) => `• ${i.qty} x ${i.name} - ${formatPrice(i.price * i.qty)}`
-    );
+    // Abrir la pestaña ya (evita bloqueo de ventanas emergentes) y rellenarla al guardar
+    const win = window.open("", "_blank");
+    try {
+      await createOrder(items.map(({ id, qty }) => ({ id, qty })));
+    } catch (err) {
+      win?.close();
+      setError(err.message || "No se pudo registrar el pedido.");
+      setBusy(false);
+      return;
+    }
+
+    const lines = items.map((i) => `• ${i.qty} x ${i.name} - ${formatPrice(i.price * i.qty)}`);
     const message =
-      "Hola, quiero hacer este pedido:\n" +
-      lines.join("\n") +
-      "\nTotal: " + formatPrice(total);
+      "Hola, quiero hacer este pedido:\n" + lines.join("\n") + "\nTotal: " + formatPrice(total);
+    const url = `https://wa.me/${WHATSAPP}?text=${encodeURIComponent(message)}`;
+    if (win) { win.opener = null; win.location.href = url; } else { window.location.href = url; }
 
-    window.open(
-      `https://wa.me/${WHATSAPP}?text=${encodeURIComponent(message)}`,
-      "_blank",
-      "noopener"
-    );
+    clear();
+    setBusy(false);
   };
 
   return (
@@ -74,8 +86,8 @@ export default function Cart({ open, onClose, cart }) {
           <p className="cart-total">
             Total: <strong>{formatPrice(total)}</strong>
           </p>
-          <button type="button" className="btn" disabled={items.length === 0} onClick={checkout}>
-            Finalizar pedido
+          <button type="button" className="btn" disabled={items.length === 0 || busy} onClick={checkout}>
+            {busy ? "Enviando…" : "Finalizar pedido"}
           </button>
           <button
             type="button"

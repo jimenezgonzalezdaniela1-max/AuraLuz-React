@@ -1,9 +1,11 @@
 # Auraluz (React + Vite)
 
     npm install
-    npm run dev      # desarrollo
-    npm run build    # producción (carpeta dist)
+    npm run dev
 
-Imágenes de productos: ponlas en `public/img/` con estos nombres:
+## Accesos
+- Cliente:        /login  y  /registro  (el cliente crea su propia cuenta)
+- Administrador:  /admin/login  -> admin@auraluz.com / admin123  (cámbialo en src/services/db.js)
+
+## Imágenes de productos (public/img/)
 rosa.jpg, girasol.jpg, campana-amarilla.jpg, margarita.jpg
-(el logo ya está en `public/img/346167.png`).
