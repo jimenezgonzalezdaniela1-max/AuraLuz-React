@@ -8,6 +8,7 @@
  * y totales los calcula el servidor.
  */
 import { products } from "../data/products";
+import { answer } from "./assistant";
 
 const KEY = "auraluz-db";
 const SESSION = "auraluz-sesion";
@@ -101,4 +102,18 @@ export async function updateOrderStatus(id, status) {
   const o = db.orders.find((o) => o.id === id);
   if (o) o.status = status;
   write(db);
+}
+
+/* ---------- Chat del asistente ----------
+ * Backend real: POST /api/chat con { messages } y el token del cliente.
+ * El servidor busca los pedidos de ESE cliente, arma el prompt (FAQ + historial),
+ * llama a la IA y devuelve { reply, suggestions: [idsDeProducto] }.
+ * El frontend nunca envía pedidos ni datos personales: solo la conversación.
+ */
+export async function sendChatMessage(messages) {
+  const u = requireRole("cliente");
+  const last = [...messages].reverse().find((m) => m.role === "user");
+  const orders = read().orders.filter((o) => o.clientId === u.id);
+  await new Promise((r) => setTimeout(r, 500)); // simula la espera del servidor
+  return answer(last?.content ?? "", orders, u.name);
 }

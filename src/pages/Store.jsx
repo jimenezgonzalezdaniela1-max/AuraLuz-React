@@ -5,6 +5,7 @@ import Hero from "../components/Hero";
 import Catalog from "../components/Catalog";
 import Cart from "../components/Cart";
 import Footer from "../components/Footer";
+import ChatWidget from "../components/ChatWidget";
 
 export default function Store() {
   const cart = useCart();
@@ -30,6 +31,7 @@ export default function Store() {
       </main>
       <Cart open={cartOpen} onClose={() => setCartOpen(false)} cart={cart} />
       <Footer />
+      <ChatWidget onAdd={handleAdd} />
     </>
   );
 }
