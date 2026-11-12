@@ -1,3 +1,4 @@
+import User from "../models/User.js";
 import { HttpError } from "../utils/httpError.js";
 import { verifyToken } from "../utils/token.js";
 
@@ -14,8 +15,18 @@ export function requireAuth(req, res, next) {
   }
 }
 
-// Exige que el usuario (ya autenticado con requireAuth) tenga uno de los roles indicados
-export const requireRole = (...roles) => (req, res, next) =>
-  roles.includes(req.auth?.role)
-    ? next()
-    : next(new HttpError(403, "No tienes permiso para esta acción."));
+// Exige uno de los roles indicados y confirma en la base de datos que la cuenta siga existiendo
+// con ese rol (un token viejo de una cuenta borrada o degradada deja de servir).
+export const requireRole =
+  (...roles) =>
+  async (req, res, next) => {
+    try {
+      if (!roles.includes(req.auth?.role)) throw new HttpError(403, "No tienes permiso para esta acción.");
+      if (!(await User.exists({ _id: req.auth.id, role: req.auth.role }))) {
+        throw new HttpError(401, "Sesión inválida.");
+      }
+      next();
+    } catch (err) {
+      next(err);
+    }
+  };

@@ -20,6 +20,10 @@ export const env = {
   port: Number(process.env.PORT) || 4000,
   mongoUri: process.env.MONGODB_URI,
   clientUrl: process.env.CLIENT_URL || "http://localhost:5173",
+  // Varios orígenes separados por coma: https://mitienda.com,http://localhost:5173
+  clientOrigins: (process.env.CLIENT_URL || "http://localhost:5173").split(",").map((s) => s.trim()).filter(Boolean),
+  // Número de proxies delante del servidor (0 en tu PC; 1 en Render, Railway, etc.)
+  trustProxy: Number(process.env.TRUST_PROXY) || 0,
   jwtSecret: process.env.JWT_SECRET,
   jwtExpiresIn: process.env.JWT_EXPIRES_IN || "7d",
   geminiApiKey: process.env.GEMINI_API_KEY || "",

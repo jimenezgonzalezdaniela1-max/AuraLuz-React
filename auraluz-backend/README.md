@@ -46,3 +46,7 @@ src/scripts       scripts de una sola vez (semilla de datos)
 ## Parte 8: chat con IA
     POST /api/chat   { messages: [{ role: "user"|"assistant", content }] }
                      -> { reply, suggestions: [slugs], source: "ia" | "local" }   (solo clientes)
+
+## Parte 9: seguridad
+Helmet (cabeceras), límites de peticiones (login, registro, chat, global), rechazo de operadores NoSQL,
+errores JSON uniformes y verificación del rol contra la base de datos en cada ruta protegida.
