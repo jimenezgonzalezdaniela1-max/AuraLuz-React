@@ -42,3 +42,7 @@ src/scripts       scripts de una sola vez (semilla de datos)
     GET   /api/admin/clients              clientes registrados
     GET   /api/admin/orders?status=...    pedidos (filtro opcional)
     PATCH /api/admin/orders/:id/status    { status: "pendiente" | "pagado" | "entregado" }
+
+## Parte 8: chat con IA
+    POST /api/chat   { messages: [{ role: "user"|"assistant", content }] }
+                     -> { reply, suggestions: [slugs], source: "ia" | "local" }   (solo clientes)

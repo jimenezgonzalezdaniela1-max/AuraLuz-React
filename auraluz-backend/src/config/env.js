@@ -22,5 +22,7 @@ export const env = {
   clientUrl: process.env.CLIENT_URL || "http://localhost:5173",
   jwtSecret: process.env.JWT_SECRET,
   jwtExpiresIn: process.env.JWT_EXPIRES_IN || "7d",
+  geminiApiKey: process.env.GEMINI_API_KEY || "",
+  geminiModel: process.env.GEMINI_MODEL || "",
   adminJwtExpiresIn: process.env.ADMIN_JWT_EXPIRES_IN || "8h",
 };

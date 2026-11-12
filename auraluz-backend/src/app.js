@@ -5,6 +5,7 @@ import healthRoutes from "./routes/health.routes.js";
 import authRoutes from "./routes/auth.routes.js";
 import productRoutes from "./routes/products.routes.js";
 import orderRoutes from "./routes/orders.routes.js";
+import chatRoutes from "./routes/chat.routes.js";
 import adminRoutes from "./routes/admin.routes.js";
 import { notFound, errorHandler } from "./middlewares/errorHandler.js";
 
@@ -17,6 +18,7 @@ app.use("/api/health", healthRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/api/products", productRoutes);
 app.use("/api/orders", orderRoutes);
+app.use("/api/chat", chatRoutes);
 app.use("/api/admin", adminRoutes);
 // Las demás rutas se agregan aquí en las próximas partes
 
