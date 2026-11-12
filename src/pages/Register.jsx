@@ -41,8 +41,8 @@ export default function Register() {
         <input id="email" name="email" type="email" required autoComplete="email" value={f.email} onChange={set} />
         <label htmlFor="phone">Teléfono</label>
         <input id="phone" name="phone" type="tel" autoComplete="tel" value={f.phone} onChange={set} />
-        <label htmlFor="password">Contraseña (mínimo 6 caracteres)</label>
-        <input id="password" name="password" type="password" required minLength={6}
+        <label htmlFor="password">Contraseña (mínimo 8 caracteres)</label>
+        <input id="password" name="password" type="password" required minLength={8}
           autoComplete="new-password" value={f.password} onChange={set} />
 
         <button className="btn" type="submit" disabled={busy}>{busy ? "Creando…" : "Crear cuenta"}</button>

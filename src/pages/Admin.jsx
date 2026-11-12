@@ -21,7 +21,11 @@ export default function Admin() {
   const pendientes = orders.filter((o) => o.status === "pendiente").length;
 
   const changeStatus = async (id, status) => {
-    await updateOrderStatus(id, status);
+    try {
+      await updateOrderStatus(id, status);
+    } catch (err) {
+      alert(err.message);
+    }
     reload();
   };
 

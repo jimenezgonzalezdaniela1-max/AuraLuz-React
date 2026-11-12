@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useCart } from "../hooks/useCart";
+import { getProducts } from "../services/api";
 import Header from "../components/Header";
 import Hero from "../components/Hero";
 import Catalog from "../components/Catalog";
@@ -10,6 +11,16 @@ import ChatWidget from "../components/ChatWidget";
 export default function Store() {
   const cart = useCart();
   const [cartOpen, setCartOpen] = useState(false);
+  const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    getProducts()
+      .then(setProducts)
+      .catch((e) => setError(e.message))
+      .finally(() => setLoading(false));
+  }, []);
 
   useEffect(() => {
     const onKey = (e) => e.key === "Escape" && setCartOpen(false);
@@ -27,11 +38,11 @@ export default function Store() {
       <Header cartCount={cart.count} onOpenCart={() => setCartOpen(true)} />
       <main>
         <Hero />
-        <Catalog onAdd={handleAdd} />
+        <Catalog products={products} loading={loading} error={error} onAdd={handleAdd} />
       </main>
       <Cart open={cartOpen} onClose={() => setCartOpen(false)} cart={cart} />
       <Footer />
-      <ChatWidget onAdd={handleAdd} />
+      <ChatWidget products={products} onAdd={handleAdd} />
     </>
   );
 }

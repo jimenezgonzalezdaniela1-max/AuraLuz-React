@@ -1,17 +1,13 @@
 # Auraluz (React + Vite)
 
-    npm install
-    npm run dev
+Funciona junto con el backend `auraluz-backend`. Necesitas DOS terminales abiertas:
 
-## Accesos
-- Cliente:        /login  y  /registro  (el cliente crea su propia cuenta)
-- Administrador:  /admin/login  -> admin@auraluz.com / admin123  (cámbialo en src/services/db.js)
+1. Backend (carpeta auraluz-backend):   npm run dev      -> http://localhost:4000
+2. Frontend (esta carpeta):             npm install && npm run dev  -> http://localhost:5173
 
-## Imágenes de productos (public/img/)
-rosa.jpg, girasol.jpg, campana-amarilla.jpg, margarita.jpg
+Accesos
+- Cliente:        /registro (crea su cuenta) y /login
+- Administrador:  /admin/login  (el correo y la clave de ADMIN_EMAIL / ADMIN_PASSWORD del backend)
 
-## Asistente de chat (recomendaciones + preguntas frecuentes)
-- Hoy responde con lógica local (`src/services/assistant.js`) usando los pedidos del cliente y `src/data/faq.js`.
-- Con el backend: `POST /api/chat` -> el servidor toma el cliente del token, lee SUS pedidos,
-  arma el prompt (FAQ + historial, sin nombre/correo/teléfono) y llama a la IA (p. ej. Gemini, capa gratuita).
-  La API key va SOLO en el servidor (variable de entorno), nunca en React.
+Imágenes de productos (public/img/): rosa.jpg, girasol.jpg, campana-amarilla.jpg, margarita.jpg
+Los precios y textos de las velas viven en la base de datos (backend), no en este proyecto.

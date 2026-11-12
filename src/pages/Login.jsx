@@ -15,9 +15,14 @@ export default function Login({ role }) {
 
   const submit = async (e) => {
     e.preventDefault();
-    const ok = await signIn(role, email, password);
-    if (ok) navigate(isAdmin ? "/admin" : "/", { replace: true });
-    else setError("Correo o contraseña incorrectos.");
+    setError("");
+    try {
+      const ok = await signIn(role, email, password);
+      if (ok) navigate(isAdmin ? "/admin" : "/", { replace: true });
+      else setError("Correo o contraseña incorrectos.");
+    } catch (err) {
+      setError(err.message);
+    }
   };
 
   return (

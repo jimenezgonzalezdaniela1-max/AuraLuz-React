@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { useAuth } from "../context/AuthContext";
 import { sendChatMessage } from "../services/api";
-import { products } from "../data/products";
 
 const QUICK = [
   "Recomiéndame una vela",
@@ -10,7 +9,7 @@ const QUICK = [
   "¿Cómo es el envío?",
 ];
 
-export default function ChatWidget({ onAdd }) {
+export default function ChatWidget({ onAdd, products = [] }) {
   const { user } = useAuth();
   const [open, setOpen] = useState(false);
   const [input, setInput] = useState("");

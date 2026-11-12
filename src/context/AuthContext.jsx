@@ -1,5 +1,6 @@
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 import { login } from "../services/api";
+import { STORAGE_KEY } from "../data/config";
 
 const SESSION = "auraluz-sesion";
 const Ctx = createContext(null);
@@ -13,6 +14,14 @@ export function AuthProvider({ children }) {
     }
   });
 
+  // api.js avisa cuando el servidor responde que la sesión venció
+  useEffect(() => {
+    const onLogout = () => setUser(null);
+    window.addEventListener("auraluz:logout", onLogout);
+    return () => window.removeEventListener("auraluz:logout", onLogout);
+  }, []);
+
+  // Devuelve true/false según las credenciales; si hay otro error (red, límite de intentos) lo lanza
   const signIn = async (role, email, password) => {
     const u = await login(role, email, password);
     if (!u) return false;
@@ -23,6 +32,7 @@ export function AuthProvider({ children }) {
 
   const signOut = () => {
     localStorage.removeItem(SESSION);
+    localStorage.removeItem(STORAGE_KEY); // el carrito no pasa a la siguiente persona
     setUser(null);
   };
 
