@@ -13,3 +13,9 @@ export function requireAuth(req, res, next) {
     next(new HttpError(401, "Sesión inválida o vencida."));
   }
 }
+
+// Exige que el usuario (ya autenticado con requireAuth) tenga uno de los roles indicados
+export const requireRole = (...roles) => (req, res, next) =>
+  roles.includes(req.auth?.role)
+    ? next()
+    : next(new HttpError(403, "No tienes permiso para esta acción."));

@@ -23,3 +23,7 @@ src/scripts       scripts de una sola vez (semilla de datos)
     POST /api/auth/register   { name, email, phone, password }  -> { token, user }
     POST /api/auth/login      { email, password }               -> { token, user }
     GET  /api/auth/me         (Authorization: Bearer <token>)   -> { user }
+
+## Parte 4: login de administrador y roles
+    POST /api/auth/admin/login  { email, password }  -> { token, user }
+    GET  /api/admin/ping        (solo rol admin)

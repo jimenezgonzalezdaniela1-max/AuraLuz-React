@@ -44,21 +44,23 @@ export const register = asyncHandler(async (req, res) => {
   res.status(201).json({ token: signToken(user), user: toPublic(user) });
 });
 
-export const login = asyncHandler(async (req, res) => {
-  const { email, password } = req.body ?? {};
-  if (!isText(email) || !isText(password)) {
-    throw new HttpError(400, "Escribe tu correo y contraseña.");
-  }
+// Cada rol entra por su propia ruta: una cuenta de cliente no sirve en el login de administrador y viceversa
+const makeLogin = (role) =>
+  asyncHandler(async (req, res) => {
+    const { email, password } = req.body ?? {};
+    if (!isText(email) || !isText(password)) {
+      throw new HttpError(400, "Escribe tu correo y contraseña.");
+    }
 
-  // Este login es solo para clientes; las cuentas de administrador entran por otra ruta (Parte 4)
-  const user = await User.findOne({ email: email.trim().toLowerCase(), role: "cliente" }).select(
-    "+passwordHash"
-  );
-  const ok = await bcrypt.compare(password, user?.passwordHash ?? DUMMY_HASH);
-  if (!user || !ok) throw new HttpError(401, "Correo o contraseña incorrectos.");
+    const user = await User.findOne({ email: email.trim().toLowerCase(), role }).select("+passwordHash");
+    const ok = await bcrypt.compare(password, user?.passwordHash ?? DUMMY_HASH);
+    if (!user || !ok) throw new HttpError(401, "Correo o contraseña incorrectos.");
 
-  res.json({ token: signToken(user), user: toPublic(user) });
-});
+    res.json({ token: signToken(user), user: toPublic(user) });
+  });
+
+export const login = makeLogin("cliente");
+export const adminLogin = makeLogin("admin");
 
 export const me = asyncHandler(async (req, res) => {
   const user = await User.findById(req.auth.id);

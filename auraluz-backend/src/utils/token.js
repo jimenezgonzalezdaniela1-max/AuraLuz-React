@@ -4,7 +4,7 @@ import { env } from "../config/env.js";
 export function signToken(user) {
   return jwt.sign({ role: user.role }, env.jwtSecret, {
     subject: String(user._id),
-    expiresIn: env.jwtExpiresIn,
+    expiresIn: user.role === "admin" ? env.adminJwtExpiresIn : env.jwtExpiresIn,
     algorithm: "HS256",
   });
 }
