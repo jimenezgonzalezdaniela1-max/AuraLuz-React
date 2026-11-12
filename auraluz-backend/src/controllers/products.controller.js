@@ -1,4 +1,5 @@
 import Product from "../models/Product.js";
+import { slugify } from "../utils/slug.js";
 import { HttpError } from "../utils/httpError.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 
@@ -43,6 +44,9 @@ export const updateProduct = asyncHandler(async (req, res) => {
       throw new HttpError(400, `El campo "${field}" no puede estar vacío.`);
     }
     update[field] = body[field].trim();
+    if (field === "image" && update.image && !IMAGE_RE.test(update.image)) {
+      throw new HttpError(400, "Imagen inválida: usa una imagen subida desde el panel o una URL https.");
+    }
   }
 
   if (body.price !== undefined) {
@@ -65,4 +69,48 @@ export const updateProduct = asyncHandler(async (req, res) => {
   if (!product) throw new HttpError(404, "Producto no encontrado.");
 
   res.json({ product: { ...toPublic(product), active: product.active } });
+});
+
+// Imágenes permitidas: subidas desde el panel, archivos del frontend (/img) o una URL https
+const IMAGE_RE = /^(\/uploads\/[a-f0-9-]+\.(jpg|png|webp)|\/img\/[\w.-]+|https:\/\/\S+)$/i;
+
+const cleanText = (value, field, max, required = false) => {
+  if (typeof value !== "string" || value.trim().length > max || (required && value.trim() === "")) {
+    throw new HttpError(400, `El campo "${field}" es inválido${required ? " o está vacío" : ""} (máximo ${max} caracteres).`);
+  }
+  return value.trim();
+};
+
+export const createProduct = asyncHandler(async (req, res) => {
+  const b = req.body ?? {};
+
+  const title = cleanText(b.title, "title", 60, true);
+  const name = b.name === undefined || b.name === "" ? `Vela ${title}` : cleanText(b.name, "name", 80, true);
+  const description = cleanText(b.description ?? "", "description", 300);
+  const alt = b.alt === undefined || b.alt === "" ? `Vela aromática ${title}` : cleanText(b.alt, "alt", 200);
+  const image = cleanText(b.image ?? "", "image", 200);
+  if (image && !IMAGE_RE.test(image)) {
+    throw new HttpError(400, "Imagen inválida: usa una imagen subida desde el panel o una URL https.");
+  }
+
+  if (!Number.isInteger(b.price) || b.price < 0 || b.price > 10_000_000) {
+    throw new HttpError(400, "El precio debe ser un número entero entre 0 y 10.000.000.");
+  }
+  if (b.active !== undefined && typeof b.active !== "boolean") {
+    throw new HttpError(400, 'El campo "active" debe ser true o false.');
+  }
+
+  // El identificador sale del título y nunca se repite: lavanda, lavanda-2...
+  const base = slugify(title) || "producto";
+  let slug = base;
+  for (let n = 2; await Product.exists({ slug }); n++) slug = `${base}-${n}`;
+
+  let product;
+  try {
+    product = await Product.create({ slug, name, title, description, price: b.price, image, alt, active: b.active ?? true });
+  } catch (err) {
+    if (err.code === 11000) throw new HttpError(409, "Ya existe un producto con ese nombre. Intenta de nuevo.");
+    throw err;
+  }
+  res.status(201).json({ product: { ...toPublic(product), active: product.active } });
 });

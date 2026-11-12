@@ -2,6 +2,7 @@ import express from "express";
 import cors from "cors";
 import helmet from "helmet";
 import { env } from "./config/env.js";
+import { UPLOADS_DIR } from "./config/paths.js";
 import healthRoutes from "./routes/health.routes.js";
 import authRoutes from "./routes/auth.routes.js";
 import productRoutes from "./routes/products.routes.js";
@@ -19,6 +20,15 @@ if (env.trustProxy) app.set("trust proxy", env.trustProxy);
 
 app.use(helmet()); // cabeceras de seguridad
 app.use(cors({ origin: env.clientOrigins, methods: ["GET", "POST", "PATCH"] }));
+app.use(
+  "/uploads",
+  express.static(UPLOADS_DIR, {
+    maxAge: "7d",
+    index: false,
+    // helmet bloquea por defecto que otro origen (el frontend en :5173) use estos archivos
+    setHeaders: (res) => res.setHeader("Cross-Origin-Resource-Policy", "cross-origin"),
+  })
+);
 app.use(express.json({ limit: "100kb" }));
 app.use(rejectOperators);
 app.use("/api", globalLimiter);

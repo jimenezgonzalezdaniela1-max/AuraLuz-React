@@ -15,13 +15,14 @@ const getSession = () => {
 
 async function request(path, { method = "GET", body, auth = true } = {}) {
   const headers = {};
-  if (body) headers["Content-Type"] = "application/json";
+  const isForm = body instanceof FormData;
+  if (body && !isForm) headers["Content-Type"] = "application/json";
   const session = getSession();
   if (auth && session?.token) headers.Authorization = `Bearer ${session.token}`;
 
   let res;
   try {
-    res = await fetch(API_URL + path, { method, headers, body: body ? JSON.stringify(body) : undefined });
+    res = await fetch(API_URL + path, { method, headers, body: !body ? undefined : isForm ? body : JSON.stringify(body) });
   } catch {
     throw new Error("No se pudo conectar con el servidor. ¿Está encendido el backend?");
   }
@@ -72,3 +73,22 @@ export const updateOrderStatus = (id, status) =>
 
 /* ---------- Chat ---------- */
 export const sendChatMessage = (messages) => request("/chat", { method: "POST", body: { messages } });
+
+/* ---------- Productos (administrador) ---------- */
+export const getAdminProducts = async () => (await request("/admin/products")).products;
+
+export const createProduct = async (data) =>
+  (await request("/admin/products", { method: "POST", body: data })).product;
+
+export const updateProduct = async (slug, changes) =>
+  (await request(`/admin/products/${slug}`, { method: "PATCH", body: changes })).product;
+
+export function uploadImage(file) {
+  const form = new FormData();
+  form.append("image", file);
+  return request("/admin/uploads", { method: "POST", body: form }); // -> { url }
+}
+
+// Las imágenes subidas viven en el backend; las demás (/img/...) en este proyecto
+export const assetUrl = (path) =>
+  path && path.startsWith("/uploads/") ? API_URL.replace(/\/api\/?$/, "") + path : path;

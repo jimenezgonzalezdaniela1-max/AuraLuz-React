@@ -50,3 +50,8 @@ src/scripts       scripts de una sola vez (semilla de datos)
 ## Parte 9: seguridad
 Helmet (cabeceras), límites de peticiones (login, registro, chat, global), rechazo de operadores NoSQL,
 errores JSON uniformes y verificación del rol contra la base de datos en cada ruta protegida.
+
+## Productos nuevos y subida de imágenes (admin)
+    POST /api/admin/products   { title, description, price, image?, alt?, name?, active? }
+    POST /api/admin/uploads    multipart/form-data, campo "image" (JPG/PNG/WebP, máx. 2 MB) -> { url }
+Las imágenes se guardan en la carpeta uploads/ y se sirven en /uploads/...

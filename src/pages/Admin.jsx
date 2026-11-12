@@ -5,6 +5,7 @@ import { useLive } from "../hooks/useLive";
 import { getDashboard, updateOrderStatus } from "../services/api";
 import { LOGO } from "../data/config";
 import { formatPrice } from "../utils/format";
+import ProductsTab from "../components/admin/ProductsTab";
 
 const STATUS = ["pendiente", "pagado", "entregado"];
 const fecha = (iso) => new Date(iso).toLocaleString("es-CO", { dateStyle: "short", timeStyle: "short" });
@@ -29,6 +30,12 @@ export default function Admin() {
     reload();
   };
 
+  const tabs = [
+    ["pedidos", `Pedidos (${orders.length})`, pendientes > 0 ? `${pendientes} pendientes` : ""],
+    ["clientes", `Clientes (${clients.length})`, ""],
+    ["productos", "Productos", ""],
+  ];
+
   return (
     <>
       <header className="site-header">
@@ -41,21 +48,19 @@ export default function Admin() {
 
       <main className="admin">
         <div className="tabs" role="tablist">
-          <button role="tab" aria-selected={tab === "pedidos"} className={tab === "pedidos" ? "active" : ""}
-            onClick={() => setTab("pedidos")}>
-            Pedidos ({orders.length}){pendientes > 0 && <span className="badge">{pendientes} pendientes</span>}
-          </button>
-          <button role="tab" aria-selected={tab === "clientes"} className={tab === "clientes" ? "active" : ""}
-            onClick={() => setTab("clientes")}>
-            Clientes ({clients.length})
-          </button>
+          {tabs.map(([id, label, badge]) => (
+            <button key={id} role="tab" aria-selected={tab === id} className={tab === id ? "active" : ""}
+              onClick={() => setTab(id)}>
+              {label}{badge && <span className="badge">{badge}</span>}
+            </button>
+          ))}
         </div>
         <p className="live-note">Se actualiza automáticamente.</p>
 
-        {loading && <p>Cargando…</p>}
-        {error && <p className="form-status error" role="alert">{error}</p>}
+        {tab !== "productos" && loading && <p>Cargando…</p>}
+        {tab !== "productos" && error && <p className="form-status error" role="alert">{error}</p>}
 
-        {tab === "pedidos" ? (
+        {tab === "pedidos" && (
           <div className="table-wrap">
             <table>
               <thead><tr><th>Fecha</th><th>Cliente</th><th>Contacto</th><th>Productos</th><th>Total</th><th>Estado</th></tr></thead>
@@ -81,7 +86,9 @@ export default function Admin() {
               </tbody>
             </table>
           </div>
-        ) : (
+        )}
+
+        {tab === "clientes" && (
           <div className="table-wrap">
             <table>
               <thead><tr><th>Nombre</th><th>Correo</th><th>Teléfono</th><th>Registro</th><th>Pedidos</th></tr></thead>
@@ -98,6 +105,8 @@ export default function Admin() {
             </table>
           </div>
         )}
+
+        {tab === "productos" && <ProductsTab />}
       </main>
     </>
   );

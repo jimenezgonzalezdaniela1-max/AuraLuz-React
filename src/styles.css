@@ -682,3 +682,16 @@ tr:last-child td { border-bottom: 0; }
   border: 2px solid var(--borde); border-radius: 999px;
 }
 .chat-form .btn { padding: .5em 1.1em; }
+
+/* ---------- Productos en el panel ---------- */
+.noimg { width: 100%; aspect-ratio: 1; margin-bottom: 1rem; border-radius: 10px; background: var(--borde); }
+.thumb { width: 48px; height: 48px; object-fit: cover; border-radius: 8px; }
+.thumb.big { width: 120px; height: 120px; }
+.admin .price-input { width: 7rem; padding: .4rem .6rem; }
+.admin input[type="checkbox"] { width: auto; }
+.admin input[type="file"] { padding: .5rem; border-style: dashed; }
+.btn-mini {
+  padding: .35rem .8rem; font: 700 .85rem var(--f-texto); color: var(--hoja);
+  background: var(--girasol); border: 0; border-radius: 999px; cursor: pointer;
+}
+.btn-mini:disabled { opacity: .4; cursor: default; }

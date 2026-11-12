@@ -15,6 +15,9 @@ export function errorHandler(err, req, res, next) {
   } else if (err.type === "entity.too.large") {
     status = 413;
     message = "La petición es demasiado grande.";
+  } else if (err.name === "MulterError") {
+    status = 400;
+    message = err.code === "LIMIT_FILE_SIZE" ? "La imagen supera el máximo de 2 MB." : "Archivo inválido.";
   } else if (err.name === "ValidationError") {
     status = 400;
     message = Object.values(err.errors).map((e) => e.message).join(" ");

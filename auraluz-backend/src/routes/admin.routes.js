@@ -1,7 +1,8 @@
 import { Router } from "express";
 import { requireAuth, requireRole } from "../middlewares/auth.js";
 import { dashboard, listClients, listOrders, updateOrderStatus } from "../controllers/admin.controller.js";
-import { adminListProducts, updateProduct } from "../controllers/products.controller.js";
+import { upload, uploadImage } from "../controllers/upload.controller.js";
+import { adminListProducts, createProduct, updateProduct } from "../controllers/products.controller.js";
 
 const router = Router();
 
@@ -19,6 +20,8 @@ router.get("/orders", listOrders);
 router.patch("/orders/:id/status", updateOrderStatus);
 
 router.get("/products", adminListProducts);
+router.post("/products", createProduct);
 router.patch("/products/:slug", updateProduct);
+router.post("/uploads", upload.single("image"), uploadImage);
 
 export default router;
