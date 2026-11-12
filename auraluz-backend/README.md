@@ -18,3 +18,8 @@ src/scripts       scripts de una sola vez (semilla de datos)
 ## Parte 2: modelos y semilla
     npm install
     npm run seed     # crea los 4 productos y el administrador
+
+## Parte 3: registro y login de clientes
+    POST /api/auth/register   { name, email, phone, password }  -> { token, user }
+    POST /api/auth/login      { email, password }               -> { token, user }
+    GET  /api/auth/me         (Authorization: Bearer <token>)   -> { user }
