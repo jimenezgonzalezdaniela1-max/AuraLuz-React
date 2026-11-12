@@ -36,3 +36,9 @@ src/scripts       scripts de una sola vez (semilla de datos)
 ## Parte 6: pedidos del cliente
     POST /api/orders   { items: [{ id: "rosa", qty: 2 }] }   -> { order }   (solo clientes)
     GET  /api/orders                                          -> { orders } (solo los del cliente)
+
+## Parte 7: panel del administrador (solo rol admin)
+    GET   /api/admin/dashboard            { clients, orders }  (lo que usa el panel)
+    GET   /api/admin/clients              clientes registrados
+    GET   /api/admin/orders?status=...    pedidos (filtro opcional)
+    PATCH /api/admin/orders/:id/status    { status: "pendiente" | "pagado" | "entregado" }

@@ -6,3 +6,14 @@ export const orderToPublic = (o) => ({
   status: o.status,
   createdAt: o.createdAt,
 });
+
+// Vista del administrador: además indica a qué cliente pertenece el pedido
+export const orderToAdmin = (o) => ({ ...orderToPublic(o), clientId: o.client });
+
+export const clientToPublic = (u) => ({
+  id: u._id,
+  name: u.name,
+  email: u.email,
+  phone: u.phone,
+  createdAt: u.createdAt,
+});
