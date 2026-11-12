@@ -14,3 +14,7 @@ src/controllers   lógica de cada ruta
 src/middlewares   autenticación, validación, errores
 src/services      lógica de negocio (IA, pedidos…)
 src/scripts       scripts de una sola vez (semilla de datos)
+
+## Parte 2: modelos y semilla
+    npm install
+    npm run seed     # crea los 4 productos y el administrador
