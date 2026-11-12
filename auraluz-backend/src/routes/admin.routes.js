@@ -1,5 +1,6 @@
 import { Router } from "express";
 import { requireAuth, requireRole } from "../middlewares/auth.js";
+import { adminListProducts, updateProduct } from "../controllers/products.controller.js";
 
 const router = Router();
 
@@ -10,5 +11,8 @@ router.use(requireAuth, requireRole("admin"));
 router.get("/ping", (req, res) => {
   res.json({ ok: true, mensaje: "Acceso de administrador verificado." });
 });
+
+router.get("/products", adminListProducts);
+router.patch("/products/:slug", updateProduct);
 
 export default router;

@@ -3,6 +3,7 @@ import cors from "cors";
 import { env } from "./config/env.js";
 import healthRoutes from "./routes/health.routes.js";
 import authRoutes from "./routes/auth.routes.js";
+import productRoutes from "./routes/products.routes.js";
 import adminRoutes from "./routes/admin.routes.js";
 import { notFound, errorHandler } from "./middlewares/errorHandler.js";
 
@@ -13,6 +14,7 @@ app.use(express.json({ limit: "100kb" }));
 
 app.use("/api/health", healthRoutes);
 app.use("/api/auth", authRoutes);
+app.use("/api/products", productRoutes);
 app.use("/api/admin", adminRoutes);
 // Las demás rutas se agregan aquí en las próximas partes
 

@@ -27,3 +27,8 @@ src/scripts       scripts de una sola vez (semilla de datos)
 ## Parte 4: login de administrador y roles
     POST /api/auth/admin/login  { email, password }  -> { token, user }
     GET  /api/admin/ping        (solo rol admin)
+
+## Parte 5: productos
+    GET   /api/products                 catálogo público (solo activos)
+    GET   /api/admin/products           todos los productos (admin)
+    PATCH /api/admin/products/:slug     cambia precio, textos o active (admin)
