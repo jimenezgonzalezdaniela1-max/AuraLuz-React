@@ -32,3 +32,7 @@ src/scripts       scripts de una sola vez (semilla de datos)
     GET   /api/products                 catálogo público (solo activos)
     GET   /api/admin/products           todos los productos (admin)
     PATCH /api/admin/products/:slug     cambia precio, textos o active (admin)
+
+## Parte 6: pedidos del cliente
+    POST /api/orders   { items: [{ id: "rosa", qty: 2 }] }   -> { order }   (solo clientes)
+    GET  /api/orders                                          -> { orders } (solo los del cliente)
